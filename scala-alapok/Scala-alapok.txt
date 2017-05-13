@@ -1,0 +1,69 @@
+| \gScala alapok
+
+
+'\bn\s' - next és \bRETURN\s -t is kell nyomni
+'\bb\s' - back
+'\b7 go\s' - go to slide 7
+'\br\s' - run
+
+---
+Közönséges class -ok:
+
+```
+class A
+val a = new A
+```
+
+
+case class -ok:
+
+```
+case class Person(name:String, age:Int)
+
+val adam = Person("Ádám", 42)
+```
+
+Ezeket is kapjuk: hashcode, equals, toString
+Plusz serializable lesz az objektumunk
+---
+```
+case class Person(name:String, age:Int)
+
+val adam = Person("Ádám", 42)
+
+adam.name = "Éva"
+```
+
+Eredmény:
+
+<console>:82: error: reassignment to val
+       adam.name = "Éva"
+---
+Mivel a mezők nem írhatóak helyette ezt kell csinálni:
+
+
+```
+case class Person(name:String, age:Int)
+
+val adam = Person("Ádám", 42)
+
+adam.copy(name = "Éva")
+```
+---
+Metódus:
+
+```
+def isMajor(p: Person): Boolean = p.age > 18
+```
+---
+Pattern matching:
+
+```
+case class Person(name:String, age:Int)
+
+val adam = Person("Ádám", 42)
+val éva = Person("Éva", 42)
+```
+---
+
+

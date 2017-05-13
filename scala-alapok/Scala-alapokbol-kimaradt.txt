@@ -1,0 +1,6 @@
+https://www.slideshare.net/ManuelBernhardt/six-years-of-scala-and-counting
+
+16. slide, type inference
+18. higher order functions
+49. import -ok az egyes nyelvi elemek bekapcsolásához
+---
