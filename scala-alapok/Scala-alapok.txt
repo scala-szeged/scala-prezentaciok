@@ -1,7 +1,7 @@
-| \gScala alapok
+| \gScala alapok előadás
 
 
-'\bn\s' - next és \bRETURN\s -t is kell nyomni
+'\bn\s' - next (\bRETURN\s -t is kell nyomni)
 '\bb\s' - back
 '\b7 go\s' - go to slide 7
 '\br\s' - run
@@ -10,8 +10,13 @@
 Közönséges class -ok:
 
 ```
-class A
-val a = new A
+class A(age: Int)
+var a = new A(10)
+a = new A(11)
+
+class B(val name: String)
+val b = new B("d")
+b.name
 ```
 
 
@@ -23,7 +28,7 @@ case class Person(name:String, age:Int)
 val adam = Person("Ádám", 42)
 ```
 
-Ezeket is kapjuk: hashcode, equals, toString
+A case class -okkal ezeket is kapjuk: hashcode, equals, toString
 Plusz serializable lesz az objektumunk
 ---
 ```
@@ -59,10 +64,41 @@ def isMajor(p: Person): Boolean = p.age > 18
 Pattern matching:
 
 ```
-case class Person(name:String, age:Int)
+case class Customer(name:String, company:Option[String], city:String)
 
-val adam = Person("Ádám", 42)
-val éva = Person("Éva", 42)
+def whoIsThis(c: Customer) = c match {
+    case Customer(name, _, "Budapest") => s"$name is a local"
+    case Customer(name, _, city) => s"$name is a visitor from $city"
+}
+
+val klara = Customer("Bito Klára", Some("DekorIt"), "Budapest")
+whoIsThis(klara)
+
+val sandor = Customer("Nagy Sándor", None, "Szeged")
+whoIsThis(sandor)
+```
+---
+Pattern matching több mélységben:
+
+sealed abstract class Option[+A]()
+case class Some[+A](val x : A) extends scala.Option[A]
+case object None extends scala.Option[scala.Nothing]
+
+```
+case class Customer(name:String, company:Option[String], city:String)
+
+def whoIsThis(c: Customer) = c match {
+    case Customer(name, _, "Budapest") => s"$name is a local"
+    case Customer(name, Some(co), city) =>
+        s"$name is a visitor from $city working at ${co}"
+    case Customer(name, None, city) => s"$name is a visitor from $city"
+}
+
+val gabor = Customer("Csúri Gábor", Some("Arcél"), "Szeged")
+whoIsThis(gabor)
+
+val sandor = Customer("Nagy Sándor", None, "Szeged")
+whoIsThis(sandor)
 ```
 ---
 
