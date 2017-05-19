@@ -4,3 +4,77 @@ https://www.slideshare.net/ManuelBernhardt/six-years-of-scala-and-counting
 18. higher order functions
 49. import -ok az egyes nyelvi elemek bekapcsolásához
 ---
+
+http://docs.scala-lang.org/cheatsheets/
+
+def f(x: R) vs.
+def f(x: => R)	call-by-value
+call-by-name (lazy parameters)
+---
+
+(x:R) => x*x	anonymous function
+(1 to 5).map(_*2) vs.
+(1 to 5).reduceLeft( _+_ )	anonymous function: underscore is positionally matched arg.
+(1 to 5).map( x => x*x )	anonymous function: to use an arg twice, have to name it.
+GOOD (1 to 5).map(2*)
+BAD (1 to 5).map(*2)	anonymous function: bound infix method. Use 2*_ for sanity’s sake instead.
+---
+
+1 to 5) filter {_%2 == 0} map {_*2}	anonymous functions: pipeline style. (or parens too).
+def compose(g:R=>R, h:R=>R) = (x:R) => g(h(x))
+val f = compose({_*2}, {_-1})	anonymous functions: to pass in multiple blocks, need outer parens.
+val zscore = (mean:R, sd:R) => (x:R) => (x-mean)/sd	currying, obvious syntax.
+def zscore(mean:R, sd:R) = (x:R) => (x-mean)/sd	currying, obvious syntax
+def zscore(mean:R, sd:R)(x:R) = (x-mean)/sd	currying, sugar syntax. but then:
+val normer = zscore(7, 0.4) _	need trailing underscore to get the partial, only for the sugar version.
+def mapmake[T](g:T=>T)(seq: List[T]) = seq.map(g)	generic type.
+5.+(3); 5 + 3
+(1 to 5) map (_*2)	infix sugar.
+def sum(args: Int*) = args.reduceLeft(_+_)	varargs.
+
+---
+http://www.slideshare.net/Odersky/fosdem-2009-1013261/21
+
+import scala.util.control.Breaks._
+breakable {
+for (x <- xs) {
+if (Math.random < 0.1) break
+}
+}
+
+---
+Enum -ok pattern matching -el jól együtt működően:
+(http://eed3si9n.com/tetrix-in-scala/akka.html)
+
+sealed trait StageMessage
+case object MoveLeft extends StageMessage
+case object MoveRight extends StageMessage
+case object RotateCW extends StageMessage
+case object Tick extends StageMessage
+case object Drop extends StageMessage
+case object View extends StageMessage
+
+def receive = {
+    case MoveLeft  => state = moveLeft(state)
+    case MoveRight => state = moveRight(state)
+    case RotateCW  => state = rotateCW(state)
+    case Tick      => state = tick(state)
+    case Drop      => state = drop(state)
+    case View      => sender ! state.view
+}
+
+---
+object ClientOfWebService extends App {
+
+  def getClosingPrice(symbol: String, year: Int): Double = {
+    val url = s"http://ichart.finance.yahoo.com/table.csv?s=" +
+      s"$symbol&a=11&b=01&c=$year&d=11&e=31&f=$year&g=m"
+    val data = io.Source.fromURL(url).mkString
+    val price = data.split("\n")(1).split(",")(4).toDouble
+    price
+  }
+
+  println(getClosingPrice("AMD", 2016))
+}
+
+---

@@ -1,25 +1,52 @@
 | \gScala alapok előadás
 
 
-'\bn\s' - next (\bRETURN\s -t is kell nyomni)
+'\bn\s' - next (\ENTER\s -t is kell nyomni)
 '\bb\s' - back
 '\b7 go\s' - go to slide 7
 '\br\s' - run
 
 ---
+Import teljes package -re:
+
+```
+import scala.collection._
+```
+
+
 Közönséges class -ok:
 
 ```
 class A(age: Int)
-var a = new A(10)
-a = new A(11)
+val a = new A(10)
+// nem elérhető mező: a.age
 
-class B(val name: String)
-val b = new B("d")
-b.name
+class B(val name: String) {
+    override def toString = s"B($name)"
+}
+val b = new B("Dezső")
+// elérhető mező: b.name
+```
+---
+Interface és Singleton Scala -ban:
+
+```
+trait Greeter {
+    def sayHello: Unit
+}
+
+trait NameHolder {
+    def getName: String
+}
+
+object HelloWorld extends Greeter with NameHolder {
+    def sayHello = println("Hello " + getName)
+    def getName = "World"
+}
 ```
 
-
+HelloWorld.sayHello
+---
 case class -ok:
 
 ```
@@ -41,7 +68,7 @@ adam.name = "Éva"
 
 Eredmény:
 
-<console>:82: error: reassignment to val
+<console> error: reassignment to val
        adam.name = "Éva"
 ---
 Mivel a mezők nem írhatóak helyette ezt kell csinálni:
@@ -55,11 +82,30 @@ val adam = Person("Ádám", 42)
 adam.copy(name = "Éva")
 ```
 ---
-Metódus:
+Metódusok:
 
 ```
-def isMajor(p: Person): Boolean = p.age > 18
+def isMajor1(p: Person): Boolean = {p.age > 18} // jó
+def isMajor2(p: Person): Boolean = p.age > 18 // jó
+def isMajor3(p: Person) = p.age > 18 // jó
+def isMajor4(p: Person) = {p.age > 18} // jó
+def isMajor5(p: Person) {p.age > 18} // nem jó
+
+def makeItDouble(x: Int): Int = {
+    val y = 2 * x
+    println(y)
+    y
+}
 ```
+
+
+Mezők:
+
+```
+val page: Int = 17
+var num = 56
+```
+page nem változtatható, num viszont változtatható
 ---
 Pattern matching:
 
@@ -101,5 +147,90 @@ val sandor = Customer("Nagy Sándor", None, "Szeged")
 whoIsThis(sandor)
 ```
 ---
+\bcase _ =>\s teszi kimerítővé a matching -et
+mint Javában a switch -et a default:
+
+```
+def onKeyPress(keyCode: Value) = keyCode match {
+    case Left  => ui.left()
+    case Right => ui.right()
+    case Up    => ui.up()
+    case Down  => ui.down()
+    case Space => ui.space()
+    case _ =>
+  }
+```
+---
+Adat struktúrák
+
+```
+val list = List(1, 2, 3, 4, 5)
+val nulladik = list(0)
+val h = list.head
+val t = list.tail
+
+val (paros, paratlan) = list.partition(x => x % 2 == 0)
+
+val (x,y,z) = (42, 41, 43)
+
+val list2 = 0 :: paros
+val list3 = paros ::: paratlan
+```
+---
+For comprehension:
+
+```
+for (i <- 1 to 5) {
+    println(i)
+}
+
+println
+
+for (i <- 1 until 5) {
+    println(i)
+}
+```
+---
+For comprehension:
+
+```
+val xs = List(1, 2, 3, 4, 5)
+
+val f = for (x <- xs if x%2 == 0) yield x*10
+
+// Ugyan az mint:
+val fm = xs.filter( _ % 2 == 0).map( _ * 10)
+```
 
 
+
+while és do while ugyan olyan mint Javában
+---
+Több szálon iterálás:
+
+```
+(1 to 5).par.foreach{ println }
+```
+---
+Példa: IO és Java osztály használata
+
+```
+import java.io.{File, PrintWriter}
+import scala.io.Source
+
+object Filter extends App {
+
+  private val in = Source.fromFile("/Users/setenyjanos/proba.puml")
+  val probaPuml = new File("/Users/setenyjanos/filtered.puml")
+  val out = new PrintWriter(probaPuml)
+
+  out.println("@startuml\nleft to right direction")
+  in.getLines().foreach { line =>
+    if(line.contains("field") || line.contains("button"))
+      out.println(line)
+  }
+  out.println("@enduml")
+  out.flush()
+  out.close()
+}
+```
