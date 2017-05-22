@@ -141,7 +141,7 @@ You can use Unicode and ANSI colors, too. Be creative!
 
 /\r=\s\**\s\r=\b=\s\**\s\b=
 
-/ ⚡ ☁
+/ ? ?
 
 ---
 | \gSyntax Highlighting
