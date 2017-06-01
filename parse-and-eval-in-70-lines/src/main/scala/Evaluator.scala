@@ -1,9 +1,12 @@
+package pe70
+
+
 import scala.util.parsing.combinator.JavaTokenParsers
 
 /**
   * https://gist.github.com/sschaef/5529436
   */
-object HelloWorld extends App with Expression with Parse with Eval {
+object Evaluator extends App with Expression with Parse with Eval {
 
   val env: Environment = {
     case "x" => 5
