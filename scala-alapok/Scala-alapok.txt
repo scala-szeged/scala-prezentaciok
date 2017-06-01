@@ -161,7 +161,7 @@ def onKeyPress(keyCode: Value) = keyCode match {
   }
 ```
 ---
-Adat struktúrák
+Adatstruktúrák
 
 ```
 val list = List(1, 2, 3, 4, 5)
