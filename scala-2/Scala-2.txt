@@ -1,0 +1,224 @@
+| \gScala 2. előadás
+
+
+'\bn\s' - next (\ENTER\s -t is kell nyomni)
+'\bb\s' - back
+'\b7 go\s' - go to slide 7
+'\br\s' - run
+
+---
+List, Set, Map inicializálása
+
+```
+val list1 = List("Erik", "Panni")
+val list2 = "Lajos" :: "Anna" :: "Erika" :: Nil
+
+val set = Set(21, 42)
+
+Map("list" -> list1, "set" -> set, "Sanyi" -> 1)
+```
+---
+Pattern matching listára ???
+
+```
+val list1 = List("Erik", "Panni")
+val list2 = "Lajos" :: "Anna" :: "Erika" :: Nil
+
+def findNn(list: List[String])
+
+```
+---
+case class -ok:
+
+```
+case class Person(name:String, age:Int)
+
+val adam = Person("Ádám", 42)
+```
+
+A case class -okkal ezeket is kapjuk: hashcode, equals, toString
+Plusz serializable lesz az objektumunk
+---
+```
+case class Person(name:String, age:Int)
+
+val adam = Person("Ádám", 42)
+
+adam.name = "Éva"
+```
+
+Eredmény:
+
+<console> error: reassignment to val
+       adam.name = "Éva"
+---
+Mivel a mezők nem írhatóak helyette ezt kell csinálni:
+
+
+```
+case class Person(name:String, age:Int)
+
+val adam = Person("Ádám", 42)
+
+adam.copy(name = "Éva")
+```
+---
+Metódusok:
+
+```
+def isMajor1(p: Person): Boolean = {p.age > 18} // jó
+def isMajor2(p: Person): Boolean = p.age > 18 // jó
+def isMajor3(p: Person) = p.age > 18 // jó
+def isMajor4(p: Person) = {p.age > 18} // jó
+def isMajor5(p: Person) {p.age > 18} // nem jó
+
+def makeItDouble(x: Int): Int = {
+    val y = 2 * x
+    println(y)
+    y
+}
+```
+
+
+Mezők:
+
+```
+val page: Int = 17
+var num = 56
+```
+page nem változtatható, num viszont változtatható
+---
+Pattern matching:
+
+```
+case class Customer(name:String, company:Option[String], city:String)
+
+def whoIsThis(c: Customer) = c match {
+    case Customer(name, _, "Budapest") => s"$name is a local"
+    case Customer(name, _, city) => s"$name is a visitor from $city"
+}
+
+val klara = Customer("Bito Klára", Some("DekorIt"), "Budapest")
+whoIsThis(klara)
+
+val sandor = Customer("Nagy Sándor", None, "Szeged")
+whoIsThis(sandor)
+```
+---
+Pattern matching több mélységben:
+
+sealed abstract class Option[+A]()
+case class Some[+A](val x : A) extends scala.Option[A]
+case object None extends scala.Option[scala.Nothing]
+
+```
+case class Customer(name:String, company:Option[String], city:String)
+
+def whoIsThis(c: Customer) = c match {
+    case Customer(name, _, "Budapest") => s"$name is a local"
+    case Customer(name, Some(co), city) =>
+        s"$name is a visitor from $city working at ${co}"
+    case Customer(name, None, city) => s"$name is a visitor from $city"
+}
+
+val gabor = Customer("Csúri Gábor", Some("Arcél"), "Szeged")
+whoIsThis(gabor)
+
+val sandor = Customer("Nagy Sándor", None, "Szeged")
+whoIsThis(sandor)
+```
+---
+\bcase _ =>\s teszi kimerítővé a matching -et
+mint Javában a switch -et a default:
+
+```
+def onKeyPress(keyCode: Value) = keyCode match {
+    case Left  => ui.left()
+    case Right => ui.right()
+    case Up    => ui.up()
+    case Down  => ui.down()
+    case Space => ui.space()
+    case _ =>
+  }
+```
+---
+Adatstruktúrák
+
+```
+val list = List(1, 2, 3, 4, 5)
+val nulladik = list(0)
+val h = list.head
+val t = list.tail
+
+val (paros, paratlan) = list.partition(x => x % 2 == 0)
+
+val (x,y,z) = (42, 41, 43)
+
+val list2 = 0 :: paros
+val list3 = paros ::: paratlan
+```
+---
+For comprehension:
+
+```
+for (i <- 1 to 5) {
+    println(i)
+}
+
+println
+
+for (i <- 1 until 5) {
+    println(i)
+}
+```
+---
+For comprehension:
+
+```
+val xs = List(1, 2, 3, 4, 5)
+
+val f = for (x <- xs if x%2 == 0) yield x*10
+
+// Ugyan az mint:
+val fm = xs.filter( _ % 2 == 0).map( _ * 10)
+```
+
+
+
+while és do while ugyan olyan mint Javában
+---
+Több szálon iterálás:
+
+```
+(1 to 5).par.foreach{ println }
+```
+---
+Példa: IO és Java osztály használata
+
+```
+abstract class Tree
+case class Sum(l: Tree, r: Tree) extends Tree
+case class Var(n: String) extends Tree
+case class Const(v: Int) extends Tree
+
+type Environment = String => Int
+
+def eval(t: Tree, env: Environment): Int = t match {
+    case Sum(l, r) => eval(l, env) + eval(r, env)
+    case Var(n) => env(n)
+    case Const(v) => v
+}
+
+def derive(t: Tree, v: String): Tree = t match {
+    case Sum(l, r) => Sum(derive(l, v), derive(r, v))
+    case Var(n) if (v == n) => Const(1)
+    case _ => Const(0)
+}
+
+val exp: Tree = Sum(Sum(Var("x"),Var("x")),Sum(Const(7),Var("y")))
+val env: Environment = { case "x" => 5 case "y" => 7 }
+println("Expression: " + exp)
+println("Evaluation with x=5, y=7: " + eval(exp, env))
+println("Derivative relative to x:\n " + eval(derive(exp, "x"), {case _ => -999}))
+println("Derivative relative to y:\n " + derive(exp, "y"))
+```
