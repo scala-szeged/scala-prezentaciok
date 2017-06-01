@@ -1,9 +1,9 @@
-
+import scala.util.parsing.combinator.JavaTokenParsers
 
 /**
   * https://gist.github.com/sschaef/5529436
   */
-object HelloWorld extends App with HelloParsers {
+object HelloWorld extends App with Expression with Parse with Eval {
 
   val env: Environment = {
     case "x" => 5
@@ -13,9 +13,7 @@ object HelloWorld extends App with HelloParsers {
   println(eval(parseAll(expr, "100-x*y").get, env))
 }
 
-
-trait HelloParsers extends JavaTokenParsers {
-
+trait Expression {
 
   sealed abstract class Tree
 
@@ -31,6 +29,34 @@ trait HelloParsers extends JavaTokenParsers {
 
   case class Var(n: String) extends Tree
 
+}
+
+trait Parse extends JavaTokenParsers {
+  this: Expression =>
+
+  def expr: Parser[Tree] = term ~ rep("[+-]".r ~ term) ^^ {
+    case t ~ ts => ts.foldLeft(t) {
+      case (t1, "+" ~ t2) => Add(t1, t2)
+      case (t1, "-" ~ t2) => Sub(t1, t2)
+    }
+  }
+
+  def term: Parser[Tree] = factor ~ rep("[*/]".r ~ factor) ^^ {
+    case t ~ ts => ts.foldLeft(t) {
+      case (t1, "*" ~ t2) => Mul(t1, t2)
+      case (t1, "/" ~ t2) => Div(t1, t2)
+    }
+  }
+
+  def factor: Parser[Tree] = "(" ~> expr <~ ")" | const | varr
+
+  def const: Parser[Const] = floatingPointNumber ^^ { t => Const(t.toDouble) }
+
+  def varr: Parser[Var] = "[a-zA-Z][a-zA-Z0-9_]*".r ^^ { n => Var(n) }
+}
+
+trait Eval {
+  this: Expression =>
 
   type Environment = String => Double
 
@@ -42,24 +68,4 @@ trait HelloParsers extends JavaTokenParsers {
     case Const(v) => v
     case Var(n) => env(n)
   }
-
-  def expr: Parser[Tree] = term ~ rep("[+-]".r ~ term) ^^ {
-    case t ~ ts => ts.foldLeft(t) {
-      case (t1, "+" ~ t2) => Add(t1, t2)
-      case (t1, "-" ~ t2) => Sub(t1, t2)
-    }
-  }
-
-  def term = factor ~ rep("[*/]".r ~ factor) ^^ {
-    case t ~ ts => ts.foldLeft(t) {
-      case (t1, "*" ~ t2) => Mul(t1, t2)
-      case (t1, "/" ~ t2) => Div(t1, t2)
-    }
-  }
-
-  def factor = "(" ~> expr <~ ")" | const | varr
-
-  def const = floatingPointNumber ^^ { t => Const(t.toDouble) }
-
-  def varr = "[a-zA-Z][a-zA-Z0-9_]*".r ^^ { n => Var(n) }
 }
