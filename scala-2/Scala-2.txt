@@ -28,169 +28,29 @@ def findNn(list: List[String])
 
 ```
 ---
-case class -ok:
-
 ```
-case class Person(name:String, age:Int)
-
-val adam = Person("Ádám", 42)
-```
-
-A case class -okkal ezeket is kapjuk: hashcode, equals, toString
-Plusz serializable lesz az objektumunk
----
-```
-case class Person(name:String, age:Int)
-
-val adam = Person("Ádám", 42)
-
-adam.name = "Éva"
-```
-
-Eredmény:
-
-<console> error: reassignment to val
-       adam.name = "Éva"
----
-Mivel a mezők nem írhatóak helyette ezt kell csinálni:
-
-
-```
-case class Person(name:String, age:Int)
-
-val adam = Person("Ádám", 42)
-
-adam.copy(name = "Éva")
-```
----
-Metódusok:
-
-```
-def isMajor1(p: Person): Boolean = {p.age > 18} // jó
-def isMajor2(p: Person): Boolean = p.age > 18 // jó
-def isMajor3(p: Person) = p.age > 18 // jó
-def isMajor4(p: Person) = {p.age > 18} // jó
-def isMajor5(p: Person) {p.age > 18} // nem jó
-
-def makeItDouble(x: Int): Int = {
-    val y = 2 * x
-    println(y)
-    y
+Ne futtasd, import scala.collection.GenSeq
+private def findMax(symbols: GenSeq[String]) = {
+    val startTime = System.currentTimeMillis()
+    val (topStock, topPrice) =
+      symbols
+        .map { symbol => (symbol, quandlGetYearEndClosingPrice(symbol)) }
+        .maxBy { symbolAndPrice => symbolAndPrice._2 }
+    println(s"Top stock is $topStock closing at price $$$topPrice")
+    val endTime = System.currentTimeMillis()
+    println(s"${endTime - startTime} milliseconds")
 }
-```
+def quandlGetYearEndClosingPrice(symbol : String) = {
+    val url =
+      s"http://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY" +
+      s"&symbol=$symbol&interval=1min&apikey=BXtYhdeyDHgj1_Kn5bz6"
 
-
-Mezők:
-
-```
-val page: Int = 17
-var num = 56
-```
-page nem változtatható, num viszont változtatható
----
-Pattern matching:
-
-```
-case class Customer(name:String, company:Option[String], city:String)
-
-def whoIsThis(c: Customer) = c match {
-    case Customer(name, _, "Budapest") => s"$name is a local"
-    case Customer(name, _, city) => s"$name is a visitor from $city"
+    val data = scala.io.Source.fromURL(url).mkString.lines.toList
+    val price = data(12).split("\"")(3).toDouble
+    price
 }
-
-val klara = Customer("Bito Klára", Some("DekorIt"), "Budapest")
-whoIsThis(klara)
-
-val sandor = Customer("Nagy Sándor", None, "Szeged")
-whoIsThis(sandor)
-```
----
-Pattern matching több mélységben:
-
-sealed abstract class Option[+A]()
-case class Some[+A](val x : A) extends scala.Option[A]
-case object None extends scala.Option[scala.Nothing]
-
-```
-case class Customer(name:String, company:Option[String], city:String)
-
-def whoIsThis(c: Customer) = c match {
-    case Customer(name, _, "Budapest") => s"$name is a local"
-    case Customer(name, Some(co), city) =>
-        s"$name is a visitor from $city working at ${co}"
-    case Customer(name, None, city) => s"$name is a visitor from $city"
-}
-
-val gabor = Customer("Csúri Gábor", Some("Arcél"), "Szeged")
-whoIsThis(gabor)
-
-val sandor = Customer("Nagy Sándor", None, "Szeged")
-whoIsThis(sandor)
-```
----
-\bcase _ =>\s teszi kimerítővé a matching -et
-mint Javában a switch -et a default:
-
-```
-def onKeyPress(keyCode: Value) = keyCode match {
-    case Left  => ui.left()
-    case Right => ui.right()
-    case Up    => ui.up()
-    case Down  => ui.down()
-    case Space => ui.space()
-    case _ =>
-  }
-```
----
-Adatstruktúrák
-
-```
-val list = List(1, 2, 3, 4, 5)
-val nulladik = list(0)
-val h = list.head
-val t = list.tail
-
-val (paros, paratlan) = list.partition(x => x % 2 == 0)
-
-val (x,y,z) = (42, 41, 43)
-
-val list2 = 0 :: paros
-val list3 = paros ::: paratlan
-```
----
-For comprehension:
-
-```
-for (i <- 1 to 5) {
-    println(i)
-}
-
-println
-
-for (i <- 1 until 5) {
-    println(i)
-}
-```
----
-For comprehension:
-
-```
-val xs = List(1, 2, 3, 4, 5)
-
-val f = for (x <- xs if x%2 == 0) yield x*10
-
-// Ugyan az mint:
-val fm = xs.filter( _ % 2 == 0).map( _ * 10)
-```
-
-
-
-while és do while ugyan olyan mint Javában
----
-Több szálon iterálás:
-
-```
-(1 to 5).par.foreach{ println }
+val symbols = List("GOOG","INTC","AMD","AAPL","AMZN","IBM","ORCL","MSFT")
+findMax(symbols.par)
 ```
 ---
 Példa: IO és Java osztály használata
