@@ -25,7 +25,9 @@ object DerivatorWithImplicit extends App with Expression with Parse with Eval {
 
     import WhereItIsDeclared.derive
 
+    val tree = parseAll(expr, "100-x").get
+
     implicit val deriveBy: DeriveBy = "x"
-    println(derive(parseAll(expr, "100-x").get))
+    println(derive(tree))
   }
 }

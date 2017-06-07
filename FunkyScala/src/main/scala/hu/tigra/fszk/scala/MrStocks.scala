@@ -18,10 +18,12 @@ object MrStocks extends App {
 
   def findMax(symbols: GenSeq[String]) = {
     val startTime = System.currentTimeMillis()
+
     val (topStock, topPrice) =
       symbols
         .map { symbol => (symbol, quandlGetYearEndClosingPrice(symbol)) }
         .maxBy { symbolAndPrice => symbolAndPrice._2 }
+
     println(s"Top stock is $topStock closing at price $$$topPrice")
     val endTime = System.currentTimeMillis()
     println(s"${endTime - startTime} milliseconds")
@@ -29,5 +31,5 @@ object MrStocks extends App {
 
   val symbols = List("GOOG", "INTC", "AMD", "AAPL", "AMZN", "IBM", "ORCL", "MSFT")
 
-  findMax(symbols.par)
+  findMax(symbols)
 }

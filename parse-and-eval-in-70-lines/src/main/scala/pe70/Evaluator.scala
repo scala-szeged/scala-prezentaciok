@@ -13,7 +13,11 @@ object Evaluator extends App with Expression with Parse with Eval {
     case "y" => 7
   }
 
-  println(eval(parseAll(expr, "100-x*y").get, env))
+  println(parseAll(expr, "100-x*y+5").get)
+
+  println(eval(
+    parseAll(expr, "100-x*y+5").get
+    , env))
 }
 
 trait Expression {

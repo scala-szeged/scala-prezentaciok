@@ -10,6 +10,7 @@
 List, Set, Map inicializálása
 
 ```
+val list0 = List.empty
 val list1 = List("Erik", "Panni")
 val list2 = "Lajos" :: "Anna" :: "Erika" :: Nil
 
@@ -53,7 +54,7 @@ val symbols = List("GOOG","INTC","AMD","AAPL","AMZN","IBM","ORCL","MSFT")
 findMax(symbols.par)
 ```
 ---
-Példa: IO és Java osztály használata
+Matching, helyette project: parse-and-eval-in-70-lines
 
 ```
 abstract class Tree
