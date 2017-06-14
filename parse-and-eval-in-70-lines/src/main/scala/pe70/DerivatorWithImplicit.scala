@@ -9,6 +9,7 @@ object DerivatorWithImplicit extends App with Expression with Parse with Eval {
   type DeriveBy = String
 
   object WhereItIsDeclared {
+
     //noinspection ScalaUnnecessaryParentheses
     def derive(t: Tree)(implicit deriveBy: DeriveBy): Tree = t match {
       case Add(l, r) => Add(derive(l), derive(r))
