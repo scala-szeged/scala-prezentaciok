@@ -81,10 +81,10 @@ trait Eval_With {
 
     t match {
 
-      case Add(t1, t2) => evalWith(_ + _, t1, t2)
-      case Sub(t1, t2) => evalWith(_ - _, t1, t2)
-      case Mul(t1, t2) => evalWith(_ * _, t1, t2)
-      case Div(t1, t2) => evalWith(_ / _, t1, t2)
+      case Add(l, r) => evalWith(_ + _, l, r)
+      case Sub(l, r) => evalWith(_ - _, l, r)
+      case Mul(l, r) => evalWith(_ * _, l, r)
+      case Div(l, r) => evalWith(_ / _, l, r)
 
       case Const(v) => v
       case Var(n) => env(n)

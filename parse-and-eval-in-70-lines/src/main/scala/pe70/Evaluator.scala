@@ -68,10 +68,10 @@ trait Eval {
   type Environment = String => Double
 
   def eval(t: Tree, env: Environment): Double = t match {
-    case Add(t1, t2) => eval(t1, env) + eval(t2, env)
-    case Sub(t1, t2) => eval(t1, env) - eval(t2, env)
-    case Mul(t1, t2) => eval(t1, env) * eval(t2, env)
-    case Div(t1, t2) => eval(t1, env) / eval(t2, env)
+    case Add(l, r) => eval(l, env) + eval(r, env)
+    case Sub(l, r) => eval(l, env) - eval(r, env)
+    case Mul(l, r) => eval(l, env) * eval(r, env)
+    case Div(l, r) => eval(l, env) / eval(r, env)
     case Const(v) => v
     case Var(n) => env(n)
   }
