@@ -20,23 +20,23 @@ trait Expression {
 
   sealed abstract class Tree
 
-  sealed abstract class TreeTree(val t1: Tree, val t2: Tree) extends Tree
+  sealed abstract class Branch(val t1: Tree, val t2: Tree) extends Tree
 
-  object TreeTree {
-    def unapply(arg: TreeTree): Option[(Tree, Tree)] = Some(arg.t1, arg.t2)
-  }
+  sealed abstract class Leaf extends Tree
 
-  case class Add(override val t1: Tree, override val t2: Tree) extends TreeTree(t1, t2)
 
-  case class Sub(override val t1: Tree, override val t2: Tree) extends TreeTree(t1, t2)
+  case class Add(override val t1: Tree, override val t2: Tree) extends Branch(t1, t2)
 
-  case class Mul(override val t1: Tree, override val t2: Tree) extends TreeTree(t1, t2)
+  case class Sub(override val t1: Tree, override val t2: Tree) extends Branch(t1, t2)
 
-  case class Div(override val t1: Tree, override val t2: Tree) extends TreeTree(t1, t2)
+  case class Mul(override val t1: Tree, override val t2: Tree) extends Branch(t1, t2)
 
-  case class Const(v: Double) extends Tree
+  case class Div(override val t1: Tree, override val t2: Tree) extends Branch(t1, t2)
 
-  case class Var(n: String) extends Tree
+
+  case class Const(v: Double) extends Leaf
+
+  case class Var(n: String) extends Leaf
 
 }
 
@@ -51,7 +51,7 @@ trait Eval_Dsl {
   def eval(t: Tree, env: Environment): Double = {
 
 
-    def on[T <: TreeTree](op: (Double, Double) => Double)(implicit m: Manifest[T]): Option[Double] = t match {
+    def on[T <: Branch](op: (Double, Double) => Double)(implicit m: Manifest[T]): Option[Double] = t match {
       case _: T => Some(op(eval(t.asInstanceOf[T].t1, env), eval(t.asInstanceOf[T].t2, env)))
       case _ => None
     }
@@ -63,7 +63,11 @@ trait Eval_Dsl {
     }
 
 
-    on[Add](_ + _) orElse on[Sub](_ - _) orElse on[Mul](_ * _) orElse on[Div](_ / _) orElse const_orElse_var get
+    on[Add](_ + _) orElse
+      on[Sub](_ - _) orElse
+      on[Mul](_ * _) orElse
+      on[Div](_ / _) orElse
+      const_orElse_var get
   }
 }
 
