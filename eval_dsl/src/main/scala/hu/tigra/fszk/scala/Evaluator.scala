@@ -9,7 +9,7 @@ object Evaluator extends App with Expression with Eval_Dsl {
   }
 
   println(eval(
-    Add(Sub(Const(100.0), Mul(Var("x"), Var("y"))), Const(5.0))
+    Add(  Sub(  Const(100.0), Mul(Var("x"), Var("y")  )  ), Const(5.0))
     , env))
 }
 
