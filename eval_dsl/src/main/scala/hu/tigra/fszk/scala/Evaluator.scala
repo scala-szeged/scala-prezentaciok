@@ -1,9 +1,6 @@
 package hu.tigra.fszk.scala
 
 
-/**
-  * https://gist.github.com/sschaef/5529436
-  */
 object Evaluator extends App with Expression with Eval_Dsl {
 
   val env: Environment = {
@@ -64,10 +61,10 @@ trait Eval_Dsl {
 
 
     on[Add](_ + _) orElse
-      on[Sub](_ - _) orElse
-      on[Mul](_ * _) orElse
-      on[Div](_ / _) orElse
-      const_orElse_var get
+    on[Sub](_ - _) orElse
+    on[Mul](_ * _) orElse
+    on[Div](_ / _) orElse
+    const_orElse_var get
   }
 }
 
