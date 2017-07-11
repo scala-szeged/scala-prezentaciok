@@ -1,4 +1,4 @@
-| \gScala alapok elıad·s
+| \gScala alapok el√µad√°s
 
 
 '\bn\s' - next (\ENTER\s -t is kell nyomni)
@@ -14,21 +14,21 @@ import scala.collection._
 ```
 
 
-KˆzˆnsÈges class -ok:
+K√∂z√∂ns√©ges class -ok:
 
 ```
 class A(age: Int)
 val a = new A(10)
-// nem elÈrhetı mezı: a.age
+// nem el√©rhet√µ mez√µ: a.age
 
 class B(val name: String) {
     override def toString = s"B($name)"
 }
-val b = new B("Dezsı")
-// elÈrhetı mezı: b.name
+val b = new B("Dezs√µ")
+// el√©rhet√µ mez√µ: b.name
 ```
 ---
-Interface Ès Singleton Scala -ban:
+Interface √©s Singleton Scala -ban:
 
 ```
 trait Greeter {
@@ -52,7 +52,7 @@ case class -ok:
 ```
 case class Person(name:String, age:Int)
 
-val adam = Person("¡d·m", 42)
+val adam = Person("√Åd√°m", 42)
 ```
 
 A case class -okkal ezeket is kapjuk: hashcode, equals, toString
@@ -61,35 +61,35 @@ Plusz serializable lesz az objektumunk
 ```
 case class Person(name:String, age:Int)
 
-val adam = Person("¡d·m", 42)
+val adam = Person("√Åd√°m", 42)
 
-adam.name = "…va"
+adam.name = "√âva"
 ```
 
-EredmÈny:
+Eredm√©ny:
 
 <console> error: reassignment to val
-       adam.name = "…va"
+       adam.name = "√âva"
 ---
-Mivel a mezık nem ÌrhatÛak helyette ezt kell csin·lni:
+Mivel a mez√µk nem √≠rhat√≥ak helyette ezt kell csin√°lni:
 
 
 ```
 case class Person(name:String, age:Int)
 
-val adam = Person("¡d·m", 42)
+val adam = Person("√Åd√°m", 42)
 
-adam.copy(name = "…va")
+adam.copy(name = "√âva")
 ```
 ---
-MetÛdusok:
+Met√≥dusok:
 
 ```
-def isMajor1(p: Person): Boolean = {p.age > 18} // jÛ
-def isMajor2(p: Person): Boolean = p.age > 18 // jÛ
-def isMajor3(p: Person) = p.age > 18 // jÛ
-def isMajor4(p: Person) = {p.age > 18} // jÛ
-def isMajor5(p: Person) {p.age > 18} // nem jÛ
+def isMajor1(p: Person): Boolean = {p.age > 18} // j√≥
+def isMajor2(p: Person): Boolean = p.age > 18 // j√≥
+def isMajor3(p: Person) = p.age > 18 // j√≥
+def isMajor4(p: Person) = {p.age > 18} // j√≥
+def isMajor5(p: Person) {p.age > 18} // nem j√≥
 
 def makeItDouble(x: Int): Int = {
     val y = 2 * x
@@ -99,13 +99,13 @@ def makeItDouble(x: Int): Int = {
 ```
 
 
-Mezık:
+Mez√µk:
 
 ```
 val page: Int = 17
 var num = 56
 ```
-page nem v·ltoztathatÛ, num viszont v·ltoztathatÛ
+page nem v√°ltoztathat√≥, num viszont v√°ltoztathat√≥
 ---
 Pattern matching:
 
@@ -117,14 +117,14 @@ def whoIsThis(c: Customer) = c match {
     case Customer(name, _, city) => s"$name is a visitor from $city"
 }
 
-val klara = Customer("Bito Kl·ra", Some("DekorIt"), "Budapest")
+val klara = Customer("Bito Kl√°ra", Some("DekorIt"), "Budapest")
 whoIsThis(klara)
 
-val sandor = Customer("Nagy S·ndor", None, "Szeged")
+val sandor = Customer("Nagy S√°ndor", None, "Szeged")
 whoIsThis(sandor)
 ```
 ---
-Pattern matching tˆbb mÈlysÈgben:
+Pattern matching t√∂bb m√©lys√©gben:
 
 sealed abstract class Option[+A]()
 case class Some[+A](val x : A) extends scala.Option[A]
@@ -140,15 +140,15 @@ def whoIsThis(c: Customer) = c match {
     case Customer(name, None, city) => s"$name is a visitor from $city"
 }
 
-val gabor = Customer("Cs˙ri G·bor", Some("ArcÈl"), "Szeged")
+val gabor = Customer("Cs√∫ri G√°bor", Some("Arc√©l"), "Szeged")
 whoIsThis(gabor)
 
-val sandor = Customer("Nagy S·ndor", None, "Szeged")
+val sandor = Customer("Nagy S√°ndor", None, "Szeged")
 whoIsThis(sandor)
 ```
 ---
-\bcase _ =>\s teszi kimerÌtıvÈ a matching -et
-mint Jav·ban a switch -et a default:
+\bcase _ =>\s teszi kimer√≠t√µv√© a matching -et
+mint Jav√°ban a switch -et a default:
 
 ```
 def onKeyPress(keyCode: Value) = keyCode match {
@@ -161,7 +161,7 @@ def onKeyPress(keyCode: Value) = keyCode match {
   }
 ```
 ---
-Adatstrukt˙r·k
+Adatstrukt√∫r√°k
 
 ```
 val list = List(1, 2, 3, 4, 5)
@@ -204,15 +204,15 @@ val fm = xs.filter( _ % 2 == 0).map( _ * 10)
 
 
 
-while Ès do while ugyan olyan mint Jav·ban
+while √©s do while ugyan olyan mint Jav√°ban
 ---
-Tˆbb sz·lon iter·l·s:
+T√∂bb sz√°lon iter√°l√°s:
 
 ```
 (1 to 5).par.foreach{ println }
 ```
 ---
-PÈlda: IO Ès Java oszt·ly haszn·lata
+P√©lda: IO √©s Java oszt√°ly haszn√°lata
 
 ```
 import java.io.{File, PrintWriter}
