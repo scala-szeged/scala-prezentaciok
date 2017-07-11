@@ -45,6 +45,7 @@ object HelloWorld extends Greeter with NameHolder {
 }
 ```
 
+próbáld ki:
 HelloWorld.sayHello
 ---
 case class -ok:
