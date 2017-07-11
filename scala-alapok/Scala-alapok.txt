@@ -3,7 +3,7 @@
 
 '\bn\s' - next (\ENTER\s -t is kell nyomni)
 '\bb\s' - back
-'\b7 go\s' - go to slide 7
+'\b6 go\s' - go to slide 6
 '\br\s' - run
 
 ---
