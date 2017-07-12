@@ -5,7 +5,7 @@
 '\bb\s' - back
 '\b7 go\s' - go to slide 7
 '\br\s' - run
-'\hr\s' - help
+'\bh\s' - help
 
 ---
 Import teljes package -re:
