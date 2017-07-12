@@ -375,6 +375,9 @@ case class REPLesent(
   private var deck = Deck(parseSource(source))
 
   private def parseSource(path: String): IndexedSeq[Slide] = {
+    import scala.io._
+    import java.nio.charset._
+
     Try {
       val pathFile = new File(path)
       val lines: Iterator[String] = (
@@ -383,7 +386,7 @@ case class REPLesent(
             .list
             .sorted
             .filter(_.endsWith(".replesent"))
-            .flatMap { name => io.Source.fromFile(new File(pathFile, name)).getLines }
+            .flatMap { name => io.Source.fromFile(new File(pathFile, name))(new Codec(Charset.forName("ISO-8859-1"))).getLines }
             .toIterator
         } else {
           io.Source.fromFile(path).getLines

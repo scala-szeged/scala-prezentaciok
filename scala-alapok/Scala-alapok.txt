@@ -1,4 +1,4 @@
-| \gScala alapok el√µad√°s
+| \gScala alapok elıad·s
 
 
 '\bn\s' - next (\ENTER\s -t is kell nyomni)
@@ -15,21 +15,21 @@ import scala.collection._
 ```
 
 
-K√∂z√∂ns√©ges class -ok:
+KˆzˆnsÈges class -ok:
 
 ```
 class A(age: Int)
 val a = new A(10)
-// nem el√©rhet√µ mez√µ: a.age
+// nem elÈrhetı mezı: a.age
 
 class B(val name: String) {
     override def toString = s"B($name)"
 }
-val b = new B("Dezs√µ")
-// el√©rhet√µ mez√µ: b.name
+val b = new B("Dezsı")
+// elÈrhetı mezı: b.name
 ```
 ---
-Interface √©s Singleton Scala -ban:
+Interface Ès Singleton Scala -ban:
 
 ```
 trait Greeter {
@@ -46,7 +46,7 @@ object HelloWorld extends Greeter with NameHolder {
 }
 ```
 
-pr√≥b√°ld ki:
+prÛb·ld ki:
 HelloWorld.sayHello
 ---
 case class -ok:
@@ -54,7 +54,7 @@ case class -ok:
 ```
 case class Person(name:String, age:Int)
 
-val adam = Person("√Åd√°m", 42)
+val adam = Person("¡d·m", 42)
 ```
 
 A case class -okkal ezeket is kapjuk: hashcode, equals, toString
@@ -63,35 +63,35 @@ Plusz serializable lesz az objektumunk
 ```
 case class Person(name:String, age:Int)
 
-val adam = Person("√Åd√°m", 42)
+val adam = Person("¡d·m", 42)
 
-adam.name = "√âva"
+adam.name = "…va"
 ```
 
-Eredm√©ny:
+EredmÈny:
 
 <console> error: reassignment to val
-       adam.name = "√âva"
+       adam.name = "…va"
 ---
-Mivel a mez√µk nem √≠rhat√≥ak helyette ezt kell csin√°lni:
+Mivel a mezık nem ÌrhatÛak helyette ezt kell csin·lni:
 
 
 ```
 case class Person(name:String, age:Int)
 
-val adam = Person("√Åd√°m", 42)
+val adam = Person("¡d·m", 42)
 
-adam.copy(name = "√âva")
+adam.copy(name = "…va")
 ```
 ---
-Met√≥dusok:
+MetÛdusok:
 
 ```
-def isMajor1(p: Person): Boolean = {p.age > 18} // j√≥
-def isMajor2(p: Person): Boolean = p.age > 18 // j√≥
-def isMajor3(p: Person) = p.age > 18 // j√≥
-def isMajor4(p: Person) = {p.age > 18} // j√≥
-def isMajor5(p: Person) {p.age > 18} // nem j√≥
+def isMajor1(p: Person): Boolean = {p.age > 18} // jÛ
+def isMajor2(p: Person): Boolean = p.age > 18 // jÛ
+def isMajor3(p: Person) = p.age > 18 // jÛ
+def isMajor4(p: Person) = {p.age > 18} // jÛ
+def isMajor5(p: Person) {p.age > 18} // nem jÛ
 
 def makeItDouble(x: Int): Int = {
     val y = 2 * x
@@ -101,13 +101,13 @@ def makeItDouble(x: Int): Int = {
 ```
 
 
-Mez√µk:
+Mezık:
 
 ```
 val page: Int = 17
 var num = 56
 ```
-page nem v√°ltoztathat√≥, num viszont v√°ltoztathat√≥
+page nem v·ltoztathatÛ, num viszont v·ltoztathatÛ
 ---
 Pattern matching:
 
@@ -119,14 +119,14 @@ def whoIsThis(c: Customer) = c match {
     case Customer(name, _, city) => s"$name is a visitor from $city"
 }
 
-val klara = Customer("Bito Kl√°ra", Some("DekorIt"), "Budapest")
+val klara = Customer("Bito Kl·ra", Some("DekorIt"), "Budapest")
 whoIsThis(klara)
 
-val sandor = Customer("Nagy S√°ndor", None, "Szeged")
+val sandor = Customer("Nagy S·ndor", None, "Szeged")
 whoIsThis(sandor)
 ```
 ---
-Pattern matching t√∂bb m√©lys√©gben:
+Pattern matching tˆbb mÈlysÈgben:
 
 sealed abstract class Option[+A]()
 case class Some[+A](val x : A) extends scala.Option[A]
@@ -142,15 +142,15 @@ def whoIsThis(c: Customer) = c match {
     case Customer(name, None, city) => s"$name is a visitor from $city"
 }
 
-val gabor = Customer("Cs√∫ri G√°bor", Some("Arc√©l"), "Szeged")
+val gabor = Customer("Cs˙ri G·bor", Some("ArcÈl"), "Szeged")
 whoIsThis(gabor)
 
-val sandor = Customer("Nagy S√°ndor", None, "Szeged")
+val sandor = Customer("Nagy S·ndor", None, "Szeged")
 whoIsThis(sandor)
 ```
 ---
-\bcase _ =>\s teszi kimer√≠t√µv√© a matching -et
-mint Jav√°ban a switch -et a default:
+\bcase _ =>\s teszi kimerÌtıvÈ a matching -et
+mint Jav·ban a switch -et a default:
 
 ```
 def onKeyPress(keyCode: Value) = keyCode match {
@@ -163,7 +163,7 @@ def onKeyPress(keyCode: Value) = keyCode match {
   }
 ```
 ---
-Adatstrukt√∫r√°k
+Adatstrukt˙r·k
 
 ```
 val list = List(1, 2, 3, 4, 5)
@@ -206,15 +206,15 @@ val fm = xs.filter( _ % 2 == 0).map( _ * 10)
 
 
 
-while √©s do while ugyan olyan mint Jav√°ban
+while Ès do while ugyan olyan mint Jav·ban
 ---
-T√∂bb sz√°lon iter√°l√°s:
+Tˆbb sz·lon iter·l·s:
 
 ```
 (1 to 5).par.foreach{ println }
 ```
 ---
-P√©lda: IO √©s Java oszt√°ly haszn√°lata
+PÈlda: IO Ès Java oszt·ly haszn·lata
 
 ```
 import java.io.{File, PrintWriter}
