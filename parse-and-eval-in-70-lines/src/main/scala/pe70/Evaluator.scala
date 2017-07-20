@@ -3,9 +3,6 @@ package pe70
 
 import scala.util.parsing.combinator.JavaTokenParsers
 
-/**
-  * https://gist.github.com/sschaef/5529436
-  */
 object Evaluator extends App with Expression with Parse with Eval {
 
   val env: Environment = {
@@ -14,10 +11,7 @@ object Evaluator extends App with Expression with Parse with Eval {
   }
 
   println(parseAll(expr, "100-x*y+5").get)
-
-  println(eval(
-    parseAll(expr, "100-x*y+5").get
-    , env))
+  println(eval(parseAll(expr, "100-x*y+5").get, env))
 }
 
 trait Expression {
