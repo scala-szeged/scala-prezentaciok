@@ -11,7 +11,7 @@
 Import teljes package -re:
 
 ```
-import scala.collection._
+import scala.io._
 ```
 
 
@@ -84,14 +84,14 @@ val adam = Person("Ádám", 42)
 adam.copy(name = "Éva")
 ```
 ---
-Metódusok:
+Metódusok, illetfe függvények
 
 ```
-def isMajor1(p: Person): Boolean = {p.age > 18} // jó
-def isMajor2(p: Person): Boolean = p.age > 18 // jó
-def isMajor3(p: Person) = p.age > 18 // jó
-def isMajor4(p: Person) = {p.age > 18} // jó
-def isMajor5(p: Person) {p.age > 18} // nem jó
+def isMajor1(p: Person): Boolean = {p.age >= 18} // jó
+def isMajor2(p: Person): Boolean = p.age >= 18 // jó
+def isMajor3(p: Person) = p.age >= 18 // jó
+def isMajor4(p: Person) = {p.age >= 18} // jó
+def isMajor5(p: Person) {p.age >= 18} // nem jó
 
 def makeItDouble(x: Int): Int = {
     val y = 2 * x
@@ -99,9 +99,19 @@ def makeItDouble(x: Int): Int = {
     y
 }
 ```
+---
+Függvények, folytatás
 
 
-Mezõk:
+```
+val isMajor10: Int => Boolean = { age => age >= 18 }
+val isMajor11: Int => Boolean =   age => age >= 18
+```
+
+
+
+Mezõk
+
 
 ```
 val page: Int = 17
@@ -109,7 +119,26 @@ var num = 56
 ```
 page nem változtatható, num viszont változtatható
 ---
-Pattern matching:
+Pattern matching
+
+
+```
+def prefix(word: String) = word.toLowerCase.head match {
+ case 'ö'|'ü'|'ó'|'e'|'u'|'i'|'o'|'ő'|'ú'|'a'|'é'|'á'|'ű'|'í' => "az"
+ case x => "a"
+}
+
+val e = "ember"
+val obj = "objektum"
+val ks = "Király Sanyi"
+
+val aze = prefix(e) + " " + e
+val azobj = prefix(obj) + " " + obj
+val aks = prefix(ks) + " " + ks
+```
+---
+Pattern matching folytatás
+
 
 ```
 case class Customer(name:String, company:Option[String], city:String)
@@ -163,7 +192,48 @@ def onKeyPress(keyCode: Value) = keyCode match {
   }
 ```
 ---
-Adatstruktúrák
+Adatstruktúrák, List
+
+
+```
+val list = List(1, 2, 3, 4)
+val h = list.head
+val t = list.tail
+val nulladik = list(0)
+```
+---
+Set
+
+
+```
+val mySet = Set(7,8,9)
+val c8 = mySet.contains(8)
+val c4 = mySet.contains(4)
+
+val benneVan1 :   Int => Boolean   =   n =>  6 < n && n < 10
+val benneVan2 :   Int => Boolean   =   mySet
+```
+---
+Map
+
+
+```
+val myMap = Map(5->"öt", 6->"hat")
+val v6 = myMap(6)
+val c9 = myMap.contains(9)
+val g5 = myMap.get(5)
+val g4 = myMap.get(4)
+
+val miVanBenne1 :   Int => String   =   n => n match {
+    case 5 => "öt"
+    case 6 => "hat"
+    case _ => throw new NoSuchElementException("key not found: n")
+    }
+
+val miVanBenne2 :   Int => String   =   myMap
+---
+List folytatás
+
 
 ```
 val list = List(1, 2, 3, 4, 5)
@@ -236,3 +306,9 @@ object Filter extends App {
   out.close()
 }
 ```
+---
+TODO: Set, Map
+majd később a kombinálhatóság:
+
+K => Boolean helyére Set
+K => V helyére Map
