@@ -84,6 +84,15 @@ val adam = Person("Ádám", 42)
 adam.copy(name = "Éva")
 ```
 ---
+Mezõk
+
+
+```
+val page: Int = 17
+var num = 56
+```
+page nem változtatható, num viszont változtatható
+---
 Metódusok, illetfe függvények
 
 ```
@@ -103,21 +112,26 @@ def makeItDouble(x: Int): Int = {
 Függvények, folytatás
 
 
-```
-val isMajor10: Int => Boolean = { age => age >= 18 }
-val isMajor11: Int => Boolean =   age => age >= 18
-```
-
-
-
-Mezõk
-
 
 ```
-val page: Int = 17
-var num = 56
+case class Person(name:String, age:Int)
+
+
+val isMajorUs: Int => Boolean =   age => age >= 21
+val isMajorHu: Int => Boolean = { age => age >= 18 }
+
+// Magasabb rendű függvények
+
+def isMajorPerson(p: Person, predicate: Int => Boolean): Boolean = {
+    predicate(p.age)
+}
+
+val IsJohnMajor = isMajorPerson(Person("John", 18), isMajorUs)
+val jánosNagykorúE = isMajorPerson(Person("János", 18), isMajorHu)
 ```
-page nem változtatható, num viszont változtatható
+
+
+
 ---
 Pattern matching
 
