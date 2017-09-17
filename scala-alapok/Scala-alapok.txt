@@ -143,11 +143,11 @@ def prefix(word: String) = word.toLowerCase.head match {
 }
 
 val e = "ember"
-val obj = "objektum"
+val o = "Operaház"
 val ks = "Király Sanyi"
 
 val aze = prefix(e) + " " + e
-val azobj = prefix(obj) + " " + obj
+val azo = prefix(o) + " " + o
 val aks = prefix(ks) + " " + ks
 ```
 ---
