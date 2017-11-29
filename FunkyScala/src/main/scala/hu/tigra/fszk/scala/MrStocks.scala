@@ -1,35 +1,54 @@
 package hu.tigra.fszk.scala
 
+import scala.collection.parallel.ForkJoinTaskSupport
+import scala.concurrent.forkjoin.ForkJoinPool
+import scala.collection.parallel.immutable.ParSeq
 
+
+//noinspection TypeAnnotation
 object MrStocks extends App {
 
   import scala.collection.GenSeq
 
 
-  def quandlGetYearEndClosingPrice(symbol: String) = {
-    val url =
-      s"http://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY" +
-        s"&symbol=$symbol&interval=1min&apikey=BXtYhdeyDHgj1_Kn5bz6"
+  def closingPrice(symbol: String): Double = {
+    try {
+      val url = s"http://www.google.com/finance/historical?output=csv&q=${symbol.toLowerCase}"
+      val data = scala.io.Source.fromURL(url).mkString.lines.toList
+      println(s"$symbol -  ${data.take(2)}")
+      val price = data(1).split(",")(4).toDouble
 
-    val data = scala.io.Source.fromURL(url).mkString.lines.toList
-    val price = data(12).split("\"")(3).toDouble
-    price
+      price
+
+    } catch {
+
+      case _: Throwable =>
+        0
+    }
   }
 
-  def findMax(symbols: GenSeq[String]) = {
+  def findMax(symbols: GenSeq[String], msg: String = "") = {
     val startTime = System.currentTimeMillis()
 
     val (topStock, topPrice) =
       symbols
-        .map { symbol => (symbol, quandlGetYearEndClosingPrice(symbol)) }
-        .maxBy { symbolAndPrice => symbolAndPrice._2 }
+        .map { symbol => (symbol, closingPrice(symbol)) }
+        .maxBy { case (symbol, price) => price }
 
     println(s"Top stock is $topStock closing at price $$$topPrice")
     val endTime = System.currentTimeMillis()
-    println(s"${endTime - startTime} milliseconds")
+    println(s"$msg ${endTime - startTime} milliseconds")
   }
 
-  val symbols = List("GOOG", "INTC", "AMD", "AAPL", "AMZN", "IBM", "ORCL", "MSFT")
+  val symbols = List("GOOG", "INTC", "AMD", "AAPL", "ROKU",
+    "GE", "BAC", "SQ", "VALE", "MOMO", "BSX", "MU",
+    "AMZN", "IBM", "ORCL", "MSFT", "TSLA", "NDAQ")
 
-  findMax(symbols)
+
+  findMax(symbols, "findMax(symbols)")
+  findMax(symbols.par, "findMax(symbols.par)")
+
+  val parSymbols: ParSeq[String] = symbols.par
+  parSymbols.tasksupport = new ForkJoinTaskSupport(new ForkJoinPool(20))
+  findMax(parSymbols, "20 threads, findMax(parSymbols)")
 }
